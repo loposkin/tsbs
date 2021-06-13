@@ -37,7 +37,7 @@ func (p *processor) ProcessBatch(b targets.Batch, doLoad bool) (metricCount, row
 func (p *processor) writeLatency(b *batch, latency time.Duration) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	line := fmt.Sprintf("%d %d\n", b.butchNumber, latency.Microseconds())
+	line := fmt.Sprintf("%d %.3f\n", b.butchNumber, float64(latency.Microseconds())/1000)
 	_, err := p.latenciesFile.WriteString(line)
 	if err != nil {
 		log.Fatalf("failed writing latencies to file: %s", err)
