@@ -33,10 +33,11 @@ func initProgramOptions() (*victoriametrics.SpecificConfig, load.BenchmarkRunner
 	if len(urls) == 0 {
 		log.Fatalf("missing `urls` flag")
 	}
+	latenciesFile := viper.GetString("latencies-file")
 	vmURLs := strings.Split(urls, ",")
 
 	loader := load.GetBenchmarkRunner(loaderConf)
-	return &victoriametrics.SpecificConfig{ServerURLs: vmURLs}, loader, &loaderConf
+	return &victoriametrics.SpecificConfig{ServerURLs: vmURLs, LatenciesFile: latenciesFile}, loader, &loaderConf
 }
 
 func main() {
@@ -50,4 +51,5 @@ func main() {
 		panic(err)
 	}
 	loader.RunBenchmark(benchmark)
+	benchmark.CloseLatenciesFile()
 }

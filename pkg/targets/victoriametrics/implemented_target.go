@@ -36,6 +36,11 @@ func (vm vmTarget) TargetSpecificFlags(flagPrefix string, flagSet *pflag.FlagSet
 		"http://localhost:8428/write",
 		"Comma-separated list of VictoriaMetrics ingestion URLs(single-node or VMInsert)",
 	)
+	flagSet.String(
+		flagPrefix+"latencies-file",
+		"",
+		"File to write all latencies",
+	)
 }
 
 func (vm vmTarget) TargetName() string {

@@ -18,6 +18,7 @@ type batch struct {
 	buf     *bytes.Buffer
 	rows    uint64
 	metrics uint64
+	butchNumber uint64
 }
 
 func (b *batch) Len() uint {
