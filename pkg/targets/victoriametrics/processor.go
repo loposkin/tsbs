@@ -15,7 +15,7 @@ type processor struct {
 	url    string
 	vmURLs []string
 	latenciesFile *bufio.Writer
-	mu sync.Mutex
+	mu *sync.Mutex
 }
 
 func (p *processor) Init(workerNum int, doLoad, hashWorkers bool) {
@@ -37,7 +37,7 @@ func (p *processor) ProcessBatch(b targets.Batch, doLoad bool) (metricCount, row
 func (p *processor) writeLatency(b *batch, latency time.Duration) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	line := fmt.Sprintf("%d %d\n", b.butchNumber, latency.Milliseconds())
+	line := fmt.Sprintf("%d %d\n", b.butchNumber, latency.Microseconds())
 	_, err := p.latenciesFile.WriteString(line)
 	if err != nil {
 		log.Fatalf("failed writing latencies to file: %s", err)

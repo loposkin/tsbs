@@ -32,6 +32,7 @@ type benchmark struct {
 	latenciesFile *bufio.Writer
 	dataSource targets.DataSource
 	butchCounter uint64
+	latenciesFileMutex sync.Mutex
 }
 
 func NewBenchmark(vmSpecificConfig *SpecificConfig, dataSourceConfig *source.DataSourceConfig) (*benchmark, error) {
@@ -82,7 +83,7 @@ func (b *benchmark) GetPointIndexer(maxPartitions uint) targets.PointIndexer {
 }
 
 func (b *benchmark) GetProcessor() targets.Processor {
-	return &processor{vmURLs: b.serverURLs, latenciesFile: b.latenciesFile}
+	return &processor{vmURLs: b.serverURLs, latenciesFile: b.latenciesFile, mu: &b.latenciesFileMutex}
 }
 
 func (b *benchmark) GetDBCreator() targets.DBCreator {
