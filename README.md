@@ -105,8 +105,8 @@ scripts). The easiest way to get and install the Go programs is to use
 `go get` and then `make all` to install all binaries:
 ```bash
 # Fetch TSBS and its dependencies
-$ go get github.com/timescale/tsbs
-$ cd $GOPATH/src/github.com/timescale/tsbs
+$ go get github.com/loposkin/tsbs
+$ cd $GOPATH/src/github.com/loposkin/tsbs
 $ make
 ```
 
@@ -431,7 +431,7 @@ the results.
 We welcome contributions from the community to make TSBS better!
 
 You can help either by opening an
-[issue](https://github.com/timescale/tsbs/issues) with
+[issue](https://github.com/loposkin/tsbs/issues) with
 any suggestions or bug reports, or by forking this repository,
 making your own contribution, and submitting a pull request.
 

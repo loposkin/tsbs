@@ -2,7 +2,7 @@ package load
 
 import (
 	"fmt"
-	"github.com/timescale/tsbs/pkg/targets"
+	"github.com/loposkin/tsbs/pkg/targets"
 	"log"
 	"math/rand"
 	"sync"
@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/spf13/pflag"
-	"github.com/timescale/tsbs/load/insertstrategy"
+	"github.com/loposkin/tsbs/load/insertstrategy"
 )
 
 const (

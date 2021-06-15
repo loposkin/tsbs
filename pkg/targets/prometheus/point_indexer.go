@@ -6,8 +6,8 @@ import (
 	"sync"
 
 	"github.com/timescale/promscale/pkg/prompb"
-	"github.com/timescale/tsbs/pkg/data"
-	"github.com/timescale/tsbs/pkg/targets"
+	"github.com/loposkin/tsbs/pkg/data"
+	"github.com/loposkin/tsbs/pkg/targets"
 	"go.uber.org/atomic"
 )
 

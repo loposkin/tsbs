@@ -6,12 +6,12 @@ import (
 	"time"
 
 	"github.com/timescale/promscale/pkg/prompb"
-	"github.com/timescale/tsbs/internal/inputs"
-	"github.com/timescale/tsbs/load"
-	"github.com/timescale/tsbs/pkg/data"
-	"github.com/timescale/tsbs/pkg/data/source"
-	"github.com/timescale/tsbs/pkg/data/usecases/common"
-	"github.com/timescale/tsbs/pkg/targets"
+	"github.com/loposkin/tsbs/internal/inputs"
+	"github.com/loposkin/tsbs/load"
+	"github.com/loposkin/tsbs/pkg/data"
+	"github.com/loposkin/tsbs/pkg/data/source"
+	"github.com/loposkin/tsbs/pkg/data/usecases/common"
+	"github.com/loposkin/tsbs/pkg/targets"
 )
 
 func NewBenchmark(promSpecificConfig *SpecificConfig, dataSourceConfig *source.DataSourceConfig) (targets.Benchmark, error) {

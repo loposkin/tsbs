@@ -11,13 +11,13 @@ import (
 
 	"github.com/blagojts/viper"
 	"github.com/spf13/pflag"
-	"github.com/timescale/tsbs/pkg/data"
-	"github.com/timescale/tsbs/pkg/data/serialize"
-	"github.com/timescale/tsbs/pkg/data/source"
-	"github.com/timescale/tsbs/pkg/data/usecases"
-	"github.com/timescale/tsbs/pkg/data/usecases/common"
-	"github.com/timescale/tsbs/pkg/targets"
-	"github.com/timescale/tsbs/pkg/targets/constants"
+	"github.com/loposkin/tsbs/pkg/data"
+	"github.com/loposkin/tsbs/pkg/data/serialize"
+	"github.com/loposkin/tsbs/pkg/data/source"
+	"github.com/loposkin/tsbs/pkg/data/usecases"
+	"github.com/loposkin/tsbs/pkg/data/usecases/common"
+	"github.com/loposkin/tsbs/pkg/targets"
+	"github.com/loposkin/tsbs/pkg/targets/constants"
 )
 
 const (

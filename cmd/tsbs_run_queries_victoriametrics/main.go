@@ -20,9 +20,9 @@ import (
 	"time"
 
 	"github.com/blagojts/viper"
-	"github.com/spf13/pflag"
 	"github.com/loposkin/tsbs/internal/utils"
 	"github.com/loposkin/tsbs/pkg/query"
+	"github.com/spf13/pflag"
 )
 
 // Program option vars:

@@ -129,8 +129,8 @@ mkdir -p $GOPATH/{bin,src}
 
 Get and build TSBS
 ```bash
-go get github.com/timescale/tsbs
-cd $GOPATH/src/github.com/timescale/tsbs/cmd
+go get github.com/loposkin/tsbs
+cd $GOPATH/src/github.com/loposkin/tsbs/cmd
 go get ./...
 go install ./...
 ```
@@ -138,7 +138,7 @@ go install ./...
 Run test
 
 ```bash
-cd $GOPATH/src/github.com/timescale/tsbs/scripts
+cd $GOPATH/src/github.com/loposkin/tsbs/scripts
 ```
 
 Generate test dataset. This may take some time.

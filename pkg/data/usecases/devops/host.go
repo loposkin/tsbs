@@ -2,7 +2,7 @@ package devops
 
 import (
 	"fmt"
-	"github.com/timescale/tsbs/pkg/data/usecases/common"
+	"github.com/loposkin/tsbs/pkg/data/usecases/common"
 	"math"
 	"math/rand"
 	"reflect"

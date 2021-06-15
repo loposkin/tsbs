@@ -3,7 +3,7 @@ package timescaledb
 import (
 	"database/sql"
 	"fmt"
-	"github.com/timescale/tsbs/pkg/targets"
+	"github.com/loposkin/tsbs/pkg/targets"
 	"log"
 	"regexp"
 	"strings"

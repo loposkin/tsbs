@@ -1,5 +1,7 @@
 module github.com/loposkin/tsbs
 
+replace github.com/timescale/tsbs => github.com/loposkin/tsbs v0.0.0-20210615115347-c4060b74e19a
+
 go 1.14
 
 require (
@@ -24,7 +26,7 @@ require (
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/pflag v1.0.5
 	github.com/timescale/promscale v0.0.0-20201006153045-6a66a36f5c84
-	github.com/timescale/tsbs v0.0.0-20210526181900-45b63214a5e3
+	github.com/tklauser/go-sysconf v0.3.6 // indirect
 	github.com/transceptor-technology/go-qpack v0.0.0-20190116123619-49a14b216a45
 	github.com/valyala/fasthttp v1.15.1
 	go.uber.org/atomic v1.6.0

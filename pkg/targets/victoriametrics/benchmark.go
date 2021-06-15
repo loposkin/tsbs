@@ -6,9 +6,9 @@ import (
 	"errors"
 	"github.com/blagojts/viper"
 	"github.com/prometheus/common/log"
-	"github.com/timescale/tsbs/load"
-	"github.com/timescale/tsbs/pkg/data/source"
-	"github.com/timescale/tsbs/pkg/targets"
+	"github.com/loposkin/tsbs/load"
+	"github.com/loposkin/tsbs/pkg/data/source"
+	"github.com/loposkin/tsbs/pkg/targets"
 	"sync"
 	"sync/atomic"
 )

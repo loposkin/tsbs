@@ -1,7 +1,7 @@
 package load
 
 import (
-	"github.com/timescale/tsbs/pkg/targets"
+	"github.com/loposkin/tsbs/pkg/targets"
 	"sync"
 	"sync/atomic"
 	"time"
