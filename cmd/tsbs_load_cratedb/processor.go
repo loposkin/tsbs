@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/jackc/pgx/v4"
-	"github.com/timescale/tsbs/pkg/targets"
+	"github.com/loposkin/tsbs/pkg/targets"
 	"strings"
 )
 

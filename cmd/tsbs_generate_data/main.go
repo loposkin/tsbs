@@ -23,10 +23,10 @@ import (
 
 	"github.com/blagojts/viper"
 	"github.com/spf13/pflag"
-	"github.com/timescale/tsbs/internal/inputs"
-	"github.com/timescale/tsbs/internal/utils"
-	"github.com/timescale/tsbs/pkg/data/usecases/common"
-	"github.com/timescale/tsbs/pkg/targets/initializers"
+	"github.com/loposkin/tsbs/internal/inputs"
+	"github.com/loposkin/tsbs/internal/utils"
+	"github.com/loposkin/tsbs/pkg/data/usecases/common"
+	"github.com/loposkin/tsbs/pkg/targets/initializers"
 )
 
 var (

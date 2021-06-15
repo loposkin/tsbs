@@ -5,9 +5,9 @@ import (
 	"sync"
 
 	"github.com/globalsign/mgo"
-	"github.com/timescale/tsbs/load"
-	"github.com/timescale/tsbs/pkg/targets"
-	"github.com/timescale/tsbs/pkg/targets/mongo"
+	"github.com/loposkin/tsbs/load"
+	"github.com/loposkin/tsbs/pkg/targets"
+	"github.com/loposkin/tsbs/pkg/targets/mongo"
 )
 
 // naiveBenchmark allows you to run a benchmark using the naive, one document per

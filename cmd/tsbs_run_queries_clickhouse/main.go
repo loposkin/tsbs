@@ -14,8 +14,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/kshvakov/clickhouse"
 	"github.com/spf13/pflag"
-	"github.com/timescale/tsbs/internal/utils"
-	"github.com/timescale/tsbs/pkg/query"
+	"github.com/loposkin/tsbs/internal/utils"
+	"github.com/loposkin/tsbs/pkg/query"
 )
 
 // Program option vars:

@@ -18,8 +18,8 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
-	"github.com/timescale/tsbs/internal/utils"
-	"github.com/timescale/tsbs/pkg/query"
+	"github.com/loposkin/tsbs/internal/utils"
+	"github.com/loposkin/tsbs/pkg/query"
 )
 
 const pgxDriver = "pgx" // default driver

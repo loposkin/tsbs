@@ -1,9 +1,9 @@
 package devops
 
 import (
-	"github.com/timescale/tsbs/cmd/tsbs_generate_queries/uses/common"
-	"github.com/timescale/tsbs/cmd/tsbs_generate_queries/utils"
-	"github.com/timescale/tsbs/pkg/query"
+	"github.com/loposkin/tsbs/cmd/tsbs_generate_queries/uses/common"
+	"github.com/loposkin/tsbs/cmd/tsbs_generate_queries/utils"
+	"github.com/loposkin/tsbs/pkg/query"
 )
 
 // MaxAllCPU contains info for filling in a query.Query for "max all" queries

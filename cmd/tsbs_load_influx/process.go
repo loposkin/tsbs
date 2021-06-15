@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/timescale/tsbs/pkg/targets"
+	"github.com/loposkin/tsbs/pkg/targets"
 	"time"
 
 	"github.com/valyala/fasthttp"

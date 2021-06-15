@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/timescale/tsbs/pkg/query"
+	"github.com/loposkin/tsbs/pkg/query"
 )
 
 func Test_what(t *testing.T) {

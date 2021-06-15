@@ -6,10 +6,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/timescale/tsbs/cmd/tsbs_generate_queries/uses/devops"
-	"github.com/timescale/tsbs/cmd/tsbs_generate_queries/utils"
-	iutils "github.com/timescale/tsbs/internal/utils"
-	"github.com/timescale/tsbs/pkg/query"
+	"github.com/loposkin/tsbs/cmd/tsbs_generate_queries/uses/devops"
+	"github.com/loposkin/tsbs/cmd/tsbs_generate_queries/utils"
+	iutils "github.com/loposkin/tsbs/internal/utils"
+	"github.com/loposkin/tsbs/pkg/query"
 )
 
 type BaseGenerator struct{}

@@ -10,7 +10,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/timescale/tsbs/load"
+	"github.com/loposkin/tsbs/load"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -21,8 +21,8 @@ import (
 
 	"github.com/blagojts/viper"
 	"github.com/spf13/pflag"
-	"github.com/timescale/tsbs/internal/utils"
-	"github.com/timescale/tsbs/pkg/query"
+	"github.com/loposkin/tsbs/internal/utils"
+	"github.com/loposkin/tsbs/pkg/query"
 )
 
 // Program option vars:
