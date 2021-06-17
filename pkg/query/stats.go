@@ -17,6 +17,7 @@ var (
 // latency of a query (or part of query).
 type Stat struct {
 	label     []byte
+	id        uint64
 	value     float64
 	isWarm    bool
 	isPartial bool
@@ -44,9 +45,10 @@ func GetPartialStat() *Stat {
 }
 
 // Init safely initializes a Stat while minimizing heap allocations.
-func (s *Stat) Init(label []byte, value float64) *Stat {
+func (s *Stat) Init(label []byte, id uint64, value float64) *Stat {
 	s.label = s.label[:0] // clear
 	s.label = append(s.label, label...)
+	s.id = id
 	s.value = value
 	s.isWarm = false
 	return s

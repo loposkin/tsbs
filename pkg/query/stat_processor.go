@@ -27,7 +27,12 @@ type statProcessorArgs struct {
 	burnIn           uint64  // burnIn is the number of statistics to ignore before analyzing
 	printInterval    uint64  // printInterval is how often print intermediate stats (number of queries)
 	hdrLatenciesFile string  // hdrLatenciesFile is the filename to Write the High Dynamic Range (HDR) Histogram of Response Latencies to
+	latenciesFile string
+}
 
+type latency struct {
+	id uint64
+	value float64
 }
 
 // statProcessor is used to collect, analyze, and print query execution statistics.
@@ -85,6 +90,8 @@ func (sp *defaultStatProcessor) process(workers uint) {
 		statMapping[labelWarmQueries] = newStatGroup(*sp.args.limit)
 	}
 
+	var latencies []latency
+
 	i := uint64(0)
 	start := time.Now()
 	prevTime := start
@@ -105,7 +112,7 @@ func (sp *defaultStatProcessor) process(workers uint) {
 		if _, ok := statMapping[string(stat.label)]; !ok {
 			statMapping[string(stat.label)] = newStatGroup(*sp.args.limit)
 		}
-
+		latencies = append(latencies, latency{stat.id,stat.value})
 		statMapping[string(stat.label)].push(stat.value)
 
 		if !stat.isPartial {
@@ -179,6 +186,24 @@ func (sp *defaultStatProcessor) process(workers uint) {
 			log.Fatal(err)
 		}
 		err = ioutil.WriteFile(sp.args.hdrLatenciesFile, b.Bytes(), 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+	}
+
+	if len(sp.args.latenciesFile) > 0 {
+		_, _ = fmt.Printf("Saving Response Latencies to %s\n", sp.args.hdrLatenciesFile)
+		var b bytes.Buffer
+		bw := bufio.NewWriter(&b)
+		for _, latency := range latencies {
+			line := fmt.Sprintf("%d %f\n", latency.id, latency.value)
+			_, err := bw.WriteString(line)
+			if err != nil {
+				log.Fatalf("failed writing latencies to file: %s", err)
+			}
+		}
+		err = ioutil.WriteFile(sp.args.latenciesFile, b.Bytes(), 0644)
 		if err != nil {
 			log.Fatal(err)
 		}

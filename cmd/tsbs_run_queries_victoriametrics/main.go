@@ -6,17 +6,14 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/loposkin/tsbs/load"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/blagojts/viper"
@@ -28,8 +25,6 @@ import (
 // Program option vars:
 var (
 	vmURLs []string
-	latenciesFile *bufio.Writer
-	latenciesFileMu sync.Mutex
 )
 
 // Global vars:
@@ -44,8 +39,6 @@ func init() {
 
 	pflag.String("urls", "http://localhost:8428",
 		"Comma-separated list of VictoriaMetrics ingestion URLs(single-node or VMSelect)")
-	pflag.String("latencies-file", "",
-		"File to write response latencies")
 
 	pflag.Parse()
 
@@ -60,22 +53,13 @@ func init() {
 	if len(urls) == 0 {
 		log.Fatalf("missing `urls` flag")
 	}
-	latenciesFileName := viper.GetString("latencies-file")
-	if len(latenciesFileName) > 0 {
-		latenciesFile = load.GetBufferedWriter(latenciesFileName)
-	}
+
 	vmURLs = strings.Split(urls, ",")
 	runner = query.NewBenchmarkRunner(config)
 }
 
 func main() {
 	runner.Run(&query.HTTPPool, newProcessor)
-	if latenciesFile != nil {
-		err := latenciesFile.Flush()
-		if err != nil {
-			log.Fatalf("error occured while flushing latencies file")
-		}
-	}
 }
 
 func newProcessor() query.Processor {
@@ -86,16 +70,12 @@ func newProcessor() query.Processor {
 type processor struct {
 	url string
 	prettyPrintResponses bool
-	latenciesFile *bufio.Writer
-	latenciesFileMu *sync.Mutex
 }
 
 // Init query.Processor interface implementation
 func (p *processor) Init(workerNum int) {
 	p.url = vmURLs[workerNum%len(vmURLs)]
 	p.prettyPrintResponses = runner.DoPrintResponses()
-	p.latenciesFile = latenciesFile
-	p.latenciesFileMu = &latenciesFileMu
 }
 
 // ProcessQuery query.Processor interface implementation
@@ -106,19 +86,11 @@ func (p *processor) ProcessQuery(q query.Query, isWarm bool) ([]*query.Stat, err
 		return nil, err
 	}
 	stat := query.GetStat()
-	stat.Init(q.HumanLabelName(), lag)
+	stat.Init(q.HumanLabelName(), q.GetID(), lag)
 	return []*query.Stat{stat}, nil
 }
 
-func (p *processor) writeLatency(ID uint64, latency float64) {
-	p.latenciesFileMu.Lock()
-	defer p.latenciesFileMu.Unlock()
-	line := fmt.Sprintf("%d %f\n", ID, latency)
-	_, err := p.latenciesFile.WriteString(line)
-	if err != nil {
-		log.Fatalf("failed writing latencies to file: %s", err)
-	}
-}
+
 
 func (p *processor) do(q *query.HTTP) (float64, error) {
 	// populate a request with data from the Query:
@@ -154,8 +126,6 @@ func (p *processor) do(q *query.HTTP) (float64, error) {
 			return lag, err
 		}
 	}
-	if p.latenciesFile != nil {
-		p.writeLatency(q.GetID(), lag)
-	}
+
 	return lag, nil
 }

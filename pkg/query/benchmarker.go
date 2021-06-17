@@ -28,6 +28,7 @@ type BenchmarkRunnerConfig struct {
 	LimitRPS         uint64 `mapstructure:"max-rps"`
 	MemProfile       string `mapstructure:"memprofile"`
 	HDRLatenciesFile string `mapstructure:"hdr-latencies"`
+	LatenciesFile 	 string `mapstructure:"latencies-file"`
 	Workers          uint   `mapstructure:"workers"`
 	PrintResponses   bool   `mapstructure:"print-responses"`
 	Debug            int    `mapstructure:"debug"`
@@ -46,6 +47,7 @@ func (c BenchmarkRunnerConfig) AddToFlagSet(fs *pflag.FlagSet) {
 	fs.Uint64("print-interval", 100, "Print timing stats to stderr after this many queries (0 to disable)")
 	fs.String("memprofile", "", "Write a memory profile to this file.")
 	fs.String("hdr-latencies", "", "Write the High Dynamic Range (HDR) Histogram of Response Latencies to this file.")
+	fs.String("latencies-file", "", "Write the Response Latencies to this file.")
 	fs.Uint("workers", 1, "Number of concurrent requests to make.")
 	fs.Bool("prewarm-queries", false, "Run each query twice in a row so the warm query is guaranteed to be a cache hit")
 	fs.Bool("print-responses", false, "Pretty print response bodies for correctness checking (default false).")
@@ -74,6 +76,7 @@ func NewBenchmarkRunner(config BenchmarkRunnerConfig) *BenchmarkRunner {
 		prewarmQueries:   runner.PrewarmQueries,
 		burnIn:           runner.BurnIn,
 		hdrLatenciesFile: runner.HDRLatenciesFile,
+		latenciesFile: runner.LatenciesFile,
 	}
 
 	runner.sp = newStatProcessor(spArgs)
