@@ -54,7 +54,7 @@ func (l *noFlowBenchmarkRunner) work(b targets.Benchmark, wg *sync.WaitGroup, c 
 	// Process batches coming from the incoming queue (c)
 	for batch := range c {
 		startedWorkAt := time.Now()
-		metricCnt, rowCnt := proc.ProcessBatch(batch, l.DoLoad)
+		_, metricCnt, rowCnt := proc.ProcessBatch(batch, l.DoLoad)
 		atomic.AddUint64(&l.metricCnt, metricCnt)
 		atomic.AddUint64(&l.rowCnt, rowCnt)
 		l.timeToSleep(workerNum, startedWorkAt)
