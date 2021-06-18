@@ -2,12 +2,12 @@ package victoriametrics
 
 import (
 	"github.com/blagojts/viper"
-	"github.com/spf13/pflag"
 	"github.com/loposkin/tsbs/pkg/data/serialize"
 	"github.com/loposkin/tsbs/pkg/data/source"
 	"github.com/loposkin/tsbs/pkg/targets"
 	"github.com/loposkin/tsbs/pkg/targets/constants"
 	"github.com/loposkin/tsbs/pkg/targets/influx"
+	"github.com/spf13/pflag"
 )
 
 func NewTarget() targets.ImplementedTarget {
@@ -35,11 +35,6 @@ func (vm vmTarget) TargetSpecificFlags(flagPrefix string, flagSet *pflag.FlagSet
 		flagPrefix+"urls",
 		"http://localhost:8428/write",
 		"Comma-separated list of VictoriaMetrics ingestion URLs(single-node or VMInsert)",
-	)
-	flagSet.String(
-		flagPrefix+"latencies-file",
-		"",
-		"File to write all latencies",
 	)
 }
 
