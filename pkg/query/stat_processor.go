@@ -193,7 +193,7 @@ func (sp *defaultStatProcessor) process(workers uint) {
 	}
 
 	if len(sp.args.latenciesFile) > 0 {
-		_, _ = fmt.Printf("Saving Response Latencies to %s\n", sp.args.hdrLatenciesFile)
+		_, _ = fmt.Printf("Saving Response Latencies to %s\n", sp.args.latenciesFile)
 		var b bytes.Buffer
 		bw := bufio.NewWriter(&b)
 		for _, latency := range latencies {
@@ -202,6 +202,10 @@ func (sp *defaultStatProcessor) process(workers uint) {
 			if err != nil {
 				log.Fatalf("failed writing latencies to file: %s", err)
 			}
+		}
+		err := bw.Flush()
+		if err != nil {
+			log.Fatalf("failed writing latencies to file: %s", err)
 		}
 		err = ioutil.WriteFile(sp.args.latenciesFile, b.Bytes(), 0644)
 		if err != nil {
