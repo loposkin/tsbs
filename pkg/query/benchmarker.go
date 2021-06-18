@@ -76,7 +76,7 @@ func NewBenchmarkRunner(config BenchmarkRunnerConfig) *BenchmarkRunner {
 		prewarmQueries:   runner.PrewarmQueries,
 		burnIn:           runner.BurnIn,
 		hdrLatenciesFile: runner.HDRLatenciesFile,
-		latenciesFile: runner.LatenciesFile,
+		latenciesFile:    runner.LatenciesFile,
 	}
 
 	runner.sp = newStatProcessor(spArgs)

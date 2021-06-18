@@ -16,13 +16,18 @@ var (
 
 type batch struct {
 	buf     *bytes.Buffer
+	id      uint64
 	rows    uint64
 	metrics uint64
-	butchNumber uint64
 }
+
 
 func (b *batch) Len() uint {
 	return uint(b.rows)
+}
+
+func (b *batch) GetID() uint64 {
+	return b.id
 }
 
 func (b *batch) Append(item data.LoadedPoint) {

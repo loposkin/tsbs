@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"errors"
 	"github.com/blagojts/viper"
-	"github.com/prometheus/common/log"
 	"github.com/loposkin/tsbs/load"
 	"github.com/loposkin/tsbs/pkg/data/source"
 	"github.com/loposkin/tsbs/pkg/targets"
@@ -15,7 +14,6 @@ import (
 
 type SpecificConfig struct {
 	ServerURLs []string `yaml:"urls" mapstructure:"urls"`
-	LatenciesFile string `yaml:"latencies-file" mapstructure:"latencies-file"`
 }
 
 func parseSpecificConfig(v *viper.Viper) (*SpecificConfig, error) {
@@ -29,10 +27,8 @@ func parseSpecificConfig(v *viper.Viper) (*SpecificConfig, error) {
 // loader.Benchmark interface implementation
 type benchmark struct {
 	serverURLs []string
-	latenciesFile *bufio.Writer
 	dataSource targets.DataSource
 	butchCounter uint64
-	latenciesFileMutex sync.Mutex
 }
 
 func NewBenchmark(vmSpecificConfig *SpecificConfig, dataSourceConfig *source.DataSourceConfig) (*benchmark, error) {
@@ -41,29 +37,14 @@ func NewBenchmark(vmSpecificConfig *SpecificConfig, dataSourceConfig *source.Dat
 	}
 
 	br := load.GetBufferedReader(dataSourceConfig.File.Location)
-	var bw *bufio.Writer
-	if len(vmSpecificConfig.LatenciesFile) > 0 {
-		bw = load.GetBufferedWriter(vmSpecificConfig.LatenciesFile)
-	}
 	return &benchmark{
 		dataSource: &fileDataSource{
 			scanner: bufio.NewScanner(br),
 		},
 		serverURLs: vmSpecificConfig.ServerURLs,
-		latenciesFile: bw,
-		butchCounter: 0,
 	}, nil
 }
 
-func (b *benchmark) CloseLatenciesFile() {
-	if b.latenciesFile != nil {
-		err := b.latenciesFile.Flush()
-
-		if err != nil {
-			log.Fatalf("failed writing latencies to file: %s", err)
-		}
-	}
-}
 
 func (b *benchmark) GetDataSource() targets.DataSource {
 	return b.dataSource
@@ -83,7 +64,7 @@ func (b *benchmark) GetPointIndexer(maxPartitions uint) targets.PointIndexer {
 }
 
 func (b *benchmark) GetProcessor() targets.Processor {
-	return &processor{vmURLs: b.serverURLs, latenciesFile: b.latenciesFile, mu: &b.latenciesFileMutex}
+	return &processor{vmURLs: b.serverURLs}
 }
 
 func (b *benchmark) GetDBCreator() targets.DBCreator {
@@ -96,6 +77,6 @@ type factory struct {
 }
 
 func (f *factory) New() targets.Batch {
-	butchNumber := atomic.AddUint64(f.butchCounter, 1)
-	return &batch{buf: f.bufPool.Get().(*bytes.Buffer), butchNumber: butchNumber}
+	butchId := atomic.AddUint64(f.butchCounter, 1)
+	return &batch{buf: f.bufPool.Get().(*bytes.Buffer), id: butchId}
 }

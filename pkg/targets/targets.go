@@ -2,11 +2,11 @@ package targets
 
 import (
 	"github.com/blagojts/viper"
-	"github.com/spf13/pflag"
 	"github.com/loposkin/tsbs/pkg/data"
 	"github.com/loposkin/tsbs/pkg/data/serialize"
 	"github.com/loposkin/tsbs/pkg/data/source"
 	"github.com/loposkin/tsbs/pkg/data/usecases/common"
+	"github.com/spf13/pflag"
 )
 
 type ImplementedTarget interface {
@@ -26,6 +26,7 @@ type ImplementedTarget interface {
 // It needs to have a way to measure it's size to make sure
 // it does not get too large and it needs a way to append a point
 type Batch interface {
+	GetID() uint64
 	Len() uint
 	Append(data.LoadedPoint)
 }

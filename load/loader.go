@@ -9,8 +9,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/spf13/pflag"
 	"github.com/loposkin/tsbs/load/insertstrategy"
+	"github.com/spf13/pflag"
 )
 
 const (
@@ -41,6 +41,7 @@ type BenchmarkRunnerConfig struct {
 	NoFlowControl   bool          `yaml:"no-flow-control" mapstructure:"no-flow-control"`
 	ChannelCapacity uint          `yaml:"channel-capacity" mapstructure:"channel-capacity"`
 	InsertIntervals string        `yaml:"insert-intervals" mapstructure:"insert-intervals"`
+	LatenciesFile   string        `yaml:"latencies-file" mapstructure:"latencies-file"`
 	// deprecated, should not be used in other places other than tsbs_load_xx commands
 	FileName string `yaml:"file" mapstructure:"file"`
 	Seed     int64  `yaml:"seed" mapstructure:"seed"`
@@ -60,6 +61,7 @@ func (c BenchmarkRunnerConfig) AddToFlagSet(fs *pflag.FlagSet) {
 	fs.Int64("seed", 0, "PRNG seed (default: 0, which uses the current timestamp)")
 	fs.String("insert-intervals", "", "Time to wait between each insert, default '' => all workers insert ASAP. '1,2' = worker 1 waits 1s between inserts, worker 2 and others wait 2s")
 	fs.Bool("hash-workers", false, "Whether to consistently hash insert data to the same workers (i.e., the data for a particular host always goes to the same worker)")
+	fs.String("latencies-file", "", "File to write response latencies")
 }
 
 type BenchmarkRunner interface {
@@ -75,6 +77,7 @@ type CommonBenchmarkRunner struct {
 	rowCnt         uint64
 	initialRand    *rand.Rand
 	sleepRegulator insertstrategy.SleepRegulator
+	sp      	   statProcessor
 }
 
 // GetBenchmarkRunnerWithBatchSize returns the singleton CommonBenchmarkRunner for use in a benchmark program
@@ -88,6 +91,15 @@ func GetBenchmarkRunner(c BenchmarkRunnerConfig) BenchmarkRunner {
 	}
 
 	loader.initialRand = rand.New(rand.NewSource(loader.Seed))
+	spArgs := &statProcessorArgs{
+		limit:            &c.Limit,
+		printInterval:    0,
+		prewarmQueries:   false,
+		burnIn:           0,
+		hdrLatenciesFile: "",
+		latenciesFile:    c.LatenciesFile,
+	}
+	loader.sp = newStatProcessor(spArgs)
 
 	var err error
 	if c.InsertIntervals == "" {
@@ -139,6 +151,7 @@ func (l *CommonBenchmarkRunner) postRun(wg *sync.WaitGroup, start *time.Time) {
 	wg.Wait()
 	end := time.Now()
 	l.summary(end.Sub(*start))
+	l.sp.CloseAndWait()
 }
 
 // RunBenchmark takes in a Benchmark b and uses it to run the load benchmark
@@ -154,6 +167,9 @@ func (l *CommonBenchmarkRunner) RunBenchmark(b targets.Benchmark) {
 	}
 
 	channels := l.createChannels(numChannels, capacity)
+
+	// Launch the stats processor:
+	go l.sp.process(l.Workers)
 
 	// Launch all worker processes in background
 	for i := uint(0); i < l.Workers; i++ {
@@ -244,7 +260,9 @@ func (l *CommonBenchmarkRunner) work(b targets.Benchmark, wg *sync.WaitGroup, c 
 	// and send ACKs into duplexChannel.toScanner queue
 	for batch := range c.toWorker {
 		startedWorkAt := time.Now()
-		metricCnt, rowCnt := proc.ProcessBatch(batch, l.DoLoad)
+		stat, metricCnt, rowCnt := proc.ProcessBatch(batch, l.DoLoad)
+		l.sp.send(stat)
+
 		atomic.AddUint64(&l.metricCnt, metricCnt)
 		atomic.AddUint64(&l.rowCnt, rowCnt)
 		c.sendToScanner()

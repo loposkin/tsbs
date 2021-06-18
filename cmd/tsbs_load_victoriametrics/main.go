@@ -4,11 +4,11 @@ package main
 import (
 	"fmt"
 	"github.com/blagojts/viper"
-	"github.com/spf13/pflag"
 	"github.com/loposkin/tsbs/internal/utils"
 	"github.com/loposkin/tsbs/load"
 	"github.com/loposkin/tsbs/pkg/data/source"
 	"github.com/loposkin/tsbs/pkg/targets/victoriametrics"
+	"github.com/spf13/pflag"
 	"log"
 	"strings"
 )
@@ -33,11 +33,10 @@ func initProgramOptions() (*victoriametrics.SpecificConfig, load.BenchmarkRunner
 	if len(urls) == 0 {
 		log.Fatalf("missing `urls` flag")
 	}
-	latenciesFile := viper.GetString("latencies-file")
 	vmURLs := strings.Split(urls, ",")
 
 	loader := load.GetBenchmarkRunner(loaderConf)
-	return &victoriametrics.SpecificConfig{ServerURLs: vmURLs, LatenciesFile: latenciesFile}, loader, &loaderConf
+	return &victoriametrics.SpecificConfig{ServerURLs: vmURLs}, loader, &loaderConf
 }
 
 func main() {
@@ -51,5 +50,4 @@ func main() {
 		panic(err)
 	}
 	loader.RunBenchmark(benchmark)
-	benchmark.CloseLatenciesFile()
 }
