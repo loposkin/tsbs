@@ -260,8 +260,11 @@ func (l *CommonBenchmarkRunner) work(b targets.Benchmark, wg *sync.WaitGroup, c 
 	// and send ACKs into duplexChannel.toScanner queue
 	for batch := range c.toWorker {
 		startedWorkAt := time.Now()
-		stat, metricCnt, rowCnt := proc.ProcessBatch(batch, l.DoLoad)
-		l.sp.send(stat)
+		lag, metricCnt, rowCnt := proc.ProcessBatch(batch, l.DoLoad)
+		stat := GetStat()
+		stat.Init([]byte{2}, batch.GetID(), lag)
+
+		l.sp.send([]*Stat{stat})
 
 		atomic.AddUint64(&l.metricCnt, metricCnt)
 		atomic.AddUint64(&l.rowCnt, rowCnt)

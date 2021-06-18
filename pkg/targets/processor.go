@@ -1,13 +1,11 @@
 package targets
 
-import "github.com/loposkin/tsbs/load"
-
 // Processor is a type that processes the work for a loading worker
 type Processor interface {
 	// Init does per-worker setup needed before receiving data
 	Init(workerNum int, doLoad, hashWorkers bool)
 	// ProcessBatch handles a single batch of data
-	ProcessBatch(b Batch, doLoad bool) (stat []*load.Stat,metricCount, rowCount uint64)
+	ProcessBatch(b Batch, doLoad bool) (float64, uint64, uint64)
 }
 
 // ProcessorCloser is a Processor that also needs to close or cleanup afterwards

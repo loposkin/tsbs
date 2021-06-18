@@ -2,7 +2,6 @@ package victoriametrics
 
 import (
 	"bytes"
-	"github.com/loposkin/tsbs/load"
 	"github.com/loposkin/tsbs/pkg/targets"
 	"log"
 	"net/http"
@@ -18,16 +17,14 @@ func (p *processor) Init(workerNum int, doLoad, hashWorkers bool) {
 	p.url = p.vmURLs[workerNum%len(p.vmURLs)]
 }
 
-func (p *processor) ProcessBatch(b targets.Batch, doLoad bool) ([]*load.Stat, uint64, uint64) {
+func (p *processor) ProcessBatch(b targets.Batch, doLoad bool) (float64, uint64, uint64) {
 	batch := b.(*batch)
 	if !doLoad {
-		return []*load.Stat{}, batch.metrics, batch.rows
+		return 0, batch.metrics, batch.rows
 	}
 	lag, mc, rc := p.do(batch)
-	stat := load.GetStat()
-	stat.Init([]byte{1}, b.GetID(), lag)
 
-	return []*load.Stat{stat}, mc, rc
+	return lag, mc, rc
 }
 
 

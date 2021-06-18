@@ -69,7 +69,7 @@ func TestProcessorProcessBatch(t *testing.T) {
 			const ignored = false
 			p.Init(1, ignored, ignored)
 			callsBefore := vm.getCalls()
-			metrics, rows := p.ProcessBatch(b, tc.doLoad)
+			_, metrics, rows := p.ProcessBatch(b, tc.doLoad)
 			if metrics != tc.metrics {
 				t.Fatalf("expected %d metrics; got %d", tc.metrics, metrics)
 			}
